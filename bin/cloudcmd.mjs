@@ -1,25 +1,25 @@
 #!/usr/bin/env node
 
-'use strict';
-
-const Info = require('../package');
 const DIR_SERVER = '../server/';
 
-const {promisify} = require('util');
-const tryToCatch = require('try-to-catch');
+import {createRequire} from 'module';
+import {promisify} from 'util';
+import tryToCatch from 'try-to-catch';
+import {createSimport} from 'simport';
+import parse from 'yargs-parser';
 
-const exit = require(DIR_SERVER + 'exit');
-const {
+import exit from '../server/exit.js';
+import {
     createConfig,
     configPath,
-} = require(DIR_SERVER + 'config');
+} from '../server/config.js';
 
 const config = createConfig({
     configPath,
 });
 
-const env = require(DIR_SERVER + 'env');
-const prefixer = require(DIR_SERVER + '/prefixer');
+import env from '../server/env.js';
+import prefixer from '../server/prefixer.js';
 
 const choose = (a, b) => {
     if (a === undefined)
@@ -30,8 +30,26 @@ const choose = (a, b) => {
 
 process.on('unhandledRejection', exit);
 
-const {argv} = process;
-const args = require('minimist')(argv.slice(2), {
+const simport = createSimport(import.meta.url);
+const require = createRequire(import.meta.url);
+
+const Info = require('../package.json');
+
+const maybeRoot = (a) => {
+    if (a === '.')
+        return process.cwd();
+    
+    return a;
+};
+
+const yargsOptions = {
+    configuration: {
+        'strip-aliased': true,
+        'strip-dashed': true,
+    },
+    coerce: {
+        root: maybeRoot,
+    },
     string: [
         'name',
         'port',
@@ -77,6 +95,7 @@ const args = require('minimist')(argv.slice(2), {
         'import',
         'import-listen',
         'log',
+        'zip',
         'dropbox',
     ],
     default: {
@@ -91,7 +110,7 @@ const args = require('minimist')(argv.slice(2), {
         'zip'         : config('zip'),
         'username'    : env('username') || config('username'),
         'root'        : choose(env('root'), config('root')),
-        'prefix'      : choose(env('cloudcmd_prefix'), config('prefix')),
+        'prefix'      : choose(env('prefix'), config('prefix')),
         'console'     : choose(env.bool('console'), config('console')),
         'contact'     : choose(env.bool('contact'), config('contact')),
         'terminal'    : choose(env.bool('terminal'), config('terminal')),
@@ -123,19 +142,19 @@ const args = require('minimist')(argv.slice(2), {
         'dropbox-token': config('dropboxToken'),
     },
     alias: {
-        v: 'version',
-        h: 'help',
-        p: 'password',
-        o: 'online',
-        u: 'username',
-        s: 'save',
-        a: 'auth',
-        c: 'config',
+        version: 'v',
+        help: 'h',
+        password: 'p',
+        online: 'o',
+        username: 'u',
+        save: 's',
+        auth: 'a',
+        config: 'c',
     },
-    unknown: (cmd) => {
-        exit('\'%s\' is not a cloudcmd option. See \'cloudcmd --help\'.', cmd);
-    },
-});
+};
+
+const {argv} = process;
+const args = parse(argv.slice(2), yargsOptions);
 
 if (args.version)
     version();
@@ -145,6 +164,16 @@ else
     main();
 
 async function main() {
+    const validateArgs = await simport('@putout/cli-validate-args');
+    
+    const error = await validateArgs(args, [
+        ...yargsOptions.boolean,
+        ...yargsOptions.string,
+    ]);
+    
+    if (error)
+        return exit(error);
+    
     if (args.repl)
         repl();
     
@@ -186,7 +215,7 @@ async function main() {
     config('dropbox', args['dropbox']);
     config('dropboxToken', args['dropbox-token'] || '');
     
-    readConfig(args.config);
+    await readConfig(args.config);
     
     const options = {
         root: config('root'),
@@ -200,17 +229,17 @@ async function main() {
     const password = env('password') || args.password;
     
     if (password)
-        config('password', getPassword(password));
+        config('password', await getPassword(password));
     
-    validateRoot(options.root, config);
+    await validateRoot(options.root, config);
     
     if (args['show-config'])
-        showConfig();
+        await showConfig();
     
-    const distribute = require('../server/distribute');
+    const distribute = await simport('../server/distribute/index.js');
     const importConfig = promisify(distribute.import);
     
-    start(options, config);
+    await start(options, config);
     
     if (args.save)
         config.write();
@@ -219,8 +248,8 @@ async function main() {
     await importConfig(config);
 }
 
-function validateRoot(root, config) {
-    const validate = require(DIR_SERVER + 'validate');
+async function validateRoot(root, config) {
+    const validate = await simport(DIR_SERVER + 'validate.js');
     validate.root(root, config);
     
     if (root === '/')
@@ -229,8 +258,8 @@ function validateRoot(root, config) {
     console.log(`root: ${root}`);
 }
 
-function getPassword(password) {
-    const criton = require('criton');
+async function getPassword(password) {
+    const criton = await simport('criton');
     return criton(password, config('algo'));
 }
 
@@ -238,13 +267,13 @@ function version() {
     console.log('v' + Info.version);
 }
 
-function start(options, config) {
-    const SERVER = DIR_SERVER + 'server';
+async function start(options, config) {
+    const SERVER = DIR_SERVER + 'server.js';
     
     if (!args.server)
         return;
     
-    const server = require(SERVER);
+    const server = await simport(SERVER);
     server(options, config);
 }
 
@@ -257,27 +286,21 @@ function port(arg) {
     exit('cloudcmd --port: should be a number');
 }
 
-function showConfig() {
-    const show = require('../server/show-config');
+async function showConfig() {
+    const show = await simport('../server/show-config');
     const data = show(config('*'));
     
     console.log(data);
 }
 
-function readConfig(name) {
+async function readConfig(name) {
     if (!name)
         return;
     
-    const fs = require('fs');
-    const tryCatch = require('try-catch');
-    const jju = require('jju');
-    const forEachKey = require('for-each-key');
+    const tryToCatch = await simport('try-to-catch');
+    const forEachKey = await simport('for-each-key');
     
-    const readjsonSync = (name) => jju.parse(fs.readFileSync(name, 'utf8'), {
-        mode: 'json',
-    });
-    
-    const [error, data] = tryCatch(readjsonSync, name);
+    const [error, data] = await tryToCatch(simport, name);
     
     if (error)
         return exit(error.message);
@@ -285,10 +308,11 @@ function readConfig(name) {
     forEachKey(config, data);
 }
 
-function help() {
-    const bin = require('../json/help');
-    const forEachKey = require('for-each-key');
-    const currify = require('currify');
+async function help() {
+    const bin = require('../json/help.json');
+    const forEachKey = await simport('for-each-key');
+    const currify = await simport('currify');
+    
     const usage = 'Usage: cloudcmd [options]';
     const url = Info.homepage;
     const log = currify((a, b, c) => console.log(a, b, c));
@@ -305,17 +329,17 @@ function repl() {
 }
 
 async function checkUpdate() {
-    const load = require('package-json');
+    const load = await simport('package-json');
     
     const {version} = await load(Info.name, 'latest');
-    showUpdateInfo(version);
+    await showUpdateInfo(version);
 }
 
-function showUpdateInfo(version) {
+async function showUpdateInfo(version) {
     if (version === Info.version)
         return;
     
-    const chalk = require('chalk');
+    const chalk = await simport('chalk');
     
     const latestVersion = chalk.green.bold('v' + version);
     const latest = `update available: ${latestVersion}`;

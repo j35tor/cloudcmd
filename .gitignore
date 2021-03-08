@@ -11,7 +11,7 @@ modules/emitify
 .nyc_output
 
 *.swp
-.putoutcache
+.DS_Store
 
 dist
 dist-dev

@@ -1,10 +1,12 @@
 'use strict';
 
+const {Readable} = require('stream');
+
 const path = require('path');
 const fs = require('fs');
 
 const tryToCatch = require('try-to-catch');
-const test = require('supertape');
+const {test, stub} = require('supertape');
 const mockRequire = require('mock-require');
 const {reRequire, stopAll} = mockRequire;
 
@@ -24,6 +26,10 @@ const defaultConfig = {
 const {request} = serveOnce(cloudcmd, {
     config: defaultConfig,
 });
+
+const {stringify} = JSON;
+
+const {assign} = Object;
 
 test('cloudcmd: route: buttons: no console', async (t) => {
     const options = {
@@ -219,52 +225,28 @@ test('cloudcmd: route: not found', async (t) => {
     t.end();
 });
 
-test('cloudcmd: route: realpath: error', async (t) => {
-    const error = 'realpath error';
-    const {realpath} = fs.promises;
-    
-    fs.promises.realpath = async () => {
-        throw error;
-    };
-    
-    const config = {
-        root: fixtureDir,
-    };
-    
-    const options = {
-        config,
-    };
-    
-    reRequire(routePath);
-    const cloudcmd = reRequire(cloudcmdPath);
-    
-    const {request} = serveOnce(cloudcmd, {
-        config: defaultConfig,
-    });
-    
-    const {body} = await request.get('/fs/empty-file', {
-        options,
-    });
-    
-    fs.promises.realpath = realpath;
-    
-    t.ok(/^ENOENT/.test(body), 'should return error');
-    t.end();
-});
-
 test('cloudcmd: route: sendIndex: encode', async (t) => {
     const name = '"><svg onload=alert(3);>';
     const nameEncoded = '&quot;&gt;&lt;svg&nbsp;onload=alert(3);&gt;';
+    const path = '/';
     const files = [{
         name,
     }];
     
-    const read = async (path) => ({
+    const stream = Readable.from(stringify({
         path,
         files,
+    }));
+    
+    assign(stream, {
+        path,
+        files,
+        type: 'directory',
     });
     
-    mockRequire('flop', {
+    const read = stub().resolves(stream);
+    
+    mockRequire('win32', {
         read,
     });
     
@@ -285,16 +267,25 @@ test('cloudcmd: route: sendIndex: encode', async (t) => {
 
 test('cloudcmd: route: sendIndex: encode: not encoded', async (t) => {
     const name = '"><svg onload=alert(3);>';
+    const path = '/';
     const files = [{
         name,
     }];
     
-    const read = async (path) => ({
+    const stream = Readable.from(stringify({
         path,
         files,
+    }));
+    
+    assign(stream, {
+        path,
+        files,
+        type: 'directory',
     });
     
-    mockRequire('flop', {
+    const read = stub().resolves(stream);
+    
+    mockRequire('win32', {
         read,
     });
     
@@ -312,16 +303,25 @@ test('cloudcmd: route: sendIndex: encode: not encoded', async (t) => {
 
 test('cloudcmd: route: sendIndex: ddos: render', async (t) => {
     const name = '$$$\'&quot;';
+    const path = '/';
     const files = [{
         name,
     }];
     
-    const read = async (path) => ({
+    const stream = Readable.from(stringify({
         path,
         files,
+    }));
+    
+    assign(stream, {
+        path,
+        files,
+        type: 'directory',
     });
     
-    mockRequire('flop', {
+    const read = stub().resolves(stream);
+    
+    mockRequire('win32', {
         read,
     });
     
@@ -441,6 +441,21 @@ test('cloudcmd: route: dropbox', async (t) => {
     const [e] = await tryToCatch(readdir, '/root');
     
     t.ok(/token/.test(e.message), 'should contain word token in message');
+    t.end();
+});
+
+test('cloudcmd: route: content length', async (t) => {
+    const options = {
+        root: fixtureDir,
+    };
+    
+    const {headers} = await request.get('/route.js', {
+        options,
+    });
+    
+    const result = headers.get('content-length');
+    
+    t.ok(result);
     t.end();
 });
 

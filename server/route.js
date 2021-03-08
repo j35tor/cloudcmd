@@ -3,15 +3,18 @@
 const DIR_SERVER = './';
 const DIR_COMMON = '../common/';
 
-const {realpath} = require('fs').promises;
+const {extname} = require('path');
 
-const {read} = require('flop');
+const {read} = require('win32');
 const ponse = require('ponse');
 const rendy = require('rendy');
 const format = require('format-io');
 const currify = require('currify');
+const wraptile = require('wraptile');
 const tryToCatch = require('try-to-catch');
 const once = require('once');
+const pipe = require('pipe-io');
+const {contentType} = require('mime-types');
 
 const root = require(DIR_SERVER + 'root');
 const prefixer = require(DIR_SERVER + 'prefixer');
@@ -35,14 +38,13 @@ const {FS} = CloudFunc;
 const Columns = require(`${DIR_SERVER}/columns`);
 const Template = require(`${DIR_SERVER}/template`);
 
-const tokenize = (fn, a) => (b) => fn(a, b);
 const getReadDir = (config) => {
     if (!config('dropbox'))
         return read;
     
     const {readDir} = onceRequire('@cloudcmd/dropbox');
     
-    return tokenize(readDir, config('dropboxToken'));
+    return wraptile(readDir, config('dropboxToken'));
 };
 
 /**
@@ -77,25 +79,30 @@ async function route({config, options, request, response}) {
     const fullPath = root(rootName, config('root'));
     
     const read = getReadDir(config);
-    const [error, dir] = await tryToCatch(read, fullPath);
+    const [error, stream] = await tryToCatch(read, fullPath);
     const {html} = options;
     
-    if (!error)
-        return sendIndex(p, buildIndex(config, html, {
-            ...dir,
-            path: format.addSlashToEnd(rootName),
-        }));
-    
-    if (error.code !== 'ENOTDIR')
+    if (error)
         return ponse.sendError(error, p);
     
-    const [realPathError, pathReal] = await tryToCatch(realpath, fullPath);
+    if (stream.type === 'directory') {
+        const {files} = stream;
+        
+        return sendIndex(p, buildIndex(config, html, {
+            files,
+            path: format.addSlashToEnd(rootName),
+        }));
+    }
     
-    ponse.sendFile({
-        ...p,
-        name: realPathError ? name : pathReal,
-        gzip: false,
-    });
+    const {contentLength} = stream;
+    
+    response.setHeader('Content-Length', contentLength);
+    response.setHeader('Content-Type', contentType(extname(fullPath)));
+    
+    await pipe([
+        stream,
+        response,
+    ]);
 }
 
 /**
@@ -137,18 +144,18 @@ function indexProcessing(config, options) {
             .replace('icon-terminal', 'icon-terminal none');
     
     const left = rendy(Template.panel, {
-        side        : 'left',
-        content     : panel,
-        className   : !oneFilePanel ? '' : 'panel-single',
+        side: 'left',
+        content: panel,
+        className: !oneFilePanel ? '' : 'panel-single',
     });
     
     let right = '';
     
     if (!oneFilePanel)
         right = rendy(Template.panel, {
-            side        : 'right',
-            content     : panel,
-            className   : '',
+            side: 'right',
+            content: panel,
+            className: '',
         });
     
     const name = config('name');

@@ -157,7 +157,7 @@ function listen(manage, sock, auth) {
         });
 }
 
-function _middle(manage, req, res, next) {
+async function _middle(manage, req, res, next) {
     const noConfigDialog = !manage('configDialog');
     
     if (req.url !== `${apiURL}/config`)
@@ -174,7 +174,7 @@ function _middle(manage, req, res, next) {
                 .status(404)
                 .send('Config is disabled');
         
-        patch(manage, req, res);
+        await patch(manage, req, res);
         break;
     
     default:
@@ -186,10 +186,10 @@ function get(manage, request, response) {
     const data = jonny.stringify(manage('*'));
     
     ponse.send(data, {
-        name    : 'config.json',
+        name: 'config.json',
         request,
         response,
-        cache   : false,
+        cache: false,
     });
 }
 

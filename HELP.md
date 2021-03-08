@@ -1,25 +1,23 @@
-# Cloud Commander v14.9.3
+# Cloud Commander v15.9.1
 
 ### [Main][MainURL] [Blog][BlogURL] Live(![Heroku][Heroku_LIVE_IMG] [Heroku][HerokuURL])
 
-[MainURL]:                  http://cloudcmd.io "Main"
-[BlogURL]:                  http://blog.cloudcmd.io "Blog"
-[HerokuURL]:                https://cloudcmd.herokuapp.com/ "Heroku"
-[HEROKU_LIVE_IMG]:          https://status.cloudcmd.io/host/cloudcmd.herokuapp.com/img/file.png "Heroku"
-
-[DWORD]:                    https://github.com/cloudcmd/dword "Editor based on CodeMirror"
-[EDWARD]:                   https://github.com/cloudcmd/edward "Editor based on Ace"
-[DEEPWORD]:                 https://github.com/cloudcmd/deepword "Editor based on Monaco"
-[EDWARD_KEYS]:              https://github.com/cloudcmd/edward/#hot-keys "Edward Hot keys"
-[TERMUX]:                   https://termux.com "Termux"
-[INLY]:                     https://github.com/coderaiser/node-inly "Extract archive"
+[MainURL]: http://cloudcmd.io "Main"
+[BlogURL]: http://blog.cloudcmd.io "Blog"
+[HerokuURL]: https://cloudcmd.herokuapp.com/ "Heroku"
+[HEROKU_LIVE_IMG]: https://status.cloudcmd.io/host/cloudcmd.herokuapp.com/img/file.png "Heroku"
+[DWORD]: https://github.com/cloudcmd/dword "Editor based on CodeMirror"
+[EDWARD]: https://github.com/cloudcmd/edward "Editor based on Ace"
+[DEEPWORD]: https://github.com/cloudcmd/deepword "Editor based on Monaco"
+[EDWARD_KEYS]: https://github.com/cloudcmd/edward/#hot-keys "Edward Hot keys"
+[TERMUX]: https://termux.com "Termux"
+[INLY]: https://github.com/coderaiser/node-inly "Extract archive"
 
 **Cloud Commander** is a file manager for the web. It includes a command-line console and a text editor. Cloud Commander helps you manage your server and work with files, directories and programs in a web browser from any computer, mobile or tablet.
 
 ![Cloud Commander](/img/logo/cloudcmd.png "Cloud Commander")
 
-Benefits
----------------
+## Benefits
 
 - Open source (**MIT License**).
 - Has 2 classic panels.
@@ -34,8 +32,7 @@ Benefits
 - Built-in archives pack: **zip** and **tar.gz**.
 - Built-in archives extract: **zip**, **tar**, **gz**, **bz2**, **.tar.gz** and **.tar.bz2** (with help of [inly][INLY]).
 
-Installation
----------------
+## Installation
 
 Installation is very simple:
 
@@ -52,8 +49,8 @@ When in trouble, use:
 npm i cloudcmd -g --force
 ```
 
-Usage
----------------
+## Usage
+
 To start the server, just run the global *npm* binary from your terminal:
 
 ```sh
@@ -142,8 +139,8 @@ To begin using the web client, go to this URL in your browser:
 http://localhost:8000
 ```
 
-Updating the app
----------------
+## Updating the app
+
 If you installed Cloud Commander with `npm`, stop the server. Then, reinstall it with:
 
 ```sh
@@ -152,17 +149,15 @@ npm install cloudcmd -g
 
 Then, start the server again with `cloudcmd` and reload the page.
 
-Hot keys
----------------
+## Hot keys
 
 |Key                    |Operation
 |:----------------------|:--------------------------------------------
 | `F1`                  | help
 | `F2`                  | show `user menu`
 | `F3`                  | view, change directory
-| `Shift + F3`          | view as markdown
+| `Shift + F3`          | view raw file, change directory
 | `F4`                  | edit
-| `Shift + F4`          | edit in "vim" mode
 | `F5`                  | copy
 | `Alt` + `F5`          | pack
 | `F6`                  | rename/move
@@ -186,7 +181,6 @@ Hot keys
 | `Ctrl + D`            | clear local storage
 | `Ctrl + A`            | select all files in a panel
 | `Ctrl + M`            | [rename selected files](https://github.com/coderaiser/cloudcmd/releases/tag/v12.1.0) in editor
-| `Shift + Ctrl + M`    | rename selected files in vim mode of editor
 | `Ctrl + U`            | swap panels
 | `Ctrl + F3`           | sort by name
 | `Ctrl + F5`           | sort by date
@@ -205,7 +199,7 @@ Hot keys
 | `Insert`              | select current file (and move to next)
 | `F9`                  | context menu
 | `~`                   | console
-| `Ctrl + Click`        | open file on new tab
+| `Esc`                 | toggle vim hotkeys (`file manager`, `editor`)
 
 ### Vim
 
@@ -227,12 +221,13 @@ When the `--vim` option is provided, or the configuration parameter `vim` is set
 | `N`                   | navigate to previous found file
 
 Commands can be joined, for example:
+
 - `5j` will navigate **5** files below current;
 - `d5j` will remove next **5** files;
 - `dG` will remove all files from current to bottom;
 
-Drag and drop
----------------
+## Drag and drop
+
 These file operations are accessible with "drag and drop".
 
 | Drag Mouse Button | Key       | Origin    | Destination   |Operation
@@ -242,11 +237,12 @@ These file operations are accessible with "drag and drop".
 | Left              |           | Panel     | Desktop       | download files
 | Left              |           | Desktop   | Panel         | upload files
 
-View
----------------
+## View
+
 ![View](/img/screen/view.png "View")
 
 ### Features
+
 - View images.
 - View text files.
 - Play audio.
@@ -259,8 +255,8 @@ View
 | `F3`                  | open
 | `Esc`                 | close
 
-Edit
----------------
+## Edit
+
 ![Edit](/img/screen/edit.png "Edit")
 
 ### Hot keys
@@ -273,8 +269,8 @@ Edit
 
 For more details see [Edward hotkeys][EDWARD_KEYS].
 
-Console
----------------
+## Console
+
 ![Console](/img/screen/console.png "Console")
 
 ### Hot keys
@@ -287,8 +283,8 @@ Console
 
 For more details see [console hot keys](https://github.com/cloudcmd/console#hot-keys "Console Hot Keys").
 
-Terminal
----------------
+## Terminal
+
 ![Terminal](/img/screen/terminal.png "Terminal")
 
 ### Install
@@ -340,8 +336,7 @@ After that, you can use Cloud Commander's terminal in the same way as a normal s
 | `Shift` + `~`         | open
 | `Shift` + `Esc`       | close
 
-Environment Variables
----------------
+## Environment Variables
 
 Every program executed in Cloud Commander's terminal has these environment variables:
 
@@ -357,8 +352,8 @@ On Unix, you can use it this way:
 /home/coderaiser/cloudcmd/bin/cloudcmd.js
 ```
 
-Configuration
----------------
+## Configuration
+
 ![Config](/img/screen/config.png "Config")
 
 ### Hot keys
@@ -372,12 +367,12 @@ When you change any options, the `~/.cloudcmd.json` file is automatically update
 It can also be edited manually with any text editor.
 Here's a description of all options:
 
-```js
+```json
 {
     "name"                  : "",       // set tab name in web browser
     "auth"                  : false,    // enable http authentication
     "username"              : "root",   // username for authentication
-    "password"              : "toor",   // password hash for authentication
+    "password"              : "toor",   // password hash for authentication
     "algo"                  : "sha512WithRSAEncryption", // cryptographic algorithm
     "editor"                : "edward", // default, could be "dword" or "edward"
     "packer"                : "tar",    // default, could be "tar" or "zip"
@@ -397,27 +392,27 @@ Here's a description of all options:
     "confirmCopy"           : true,     // confirm copy
     "confirmMove"           : true,     // confirm move
     "showConfig"            : false,    // show config at startup
-    "showFileName"          : false     // do not show file name in view and edit
+    "showFileName"          : false,    // do not show file name in view and edit
     "contact"               : true,     // enable contact
     "configDialog"          : true,     // enable config dialog
     "configAuth"            : true,     // enable auth change in config dialog
     "console"               : true,     // enable console
-    "syncConsolePath"       : false     // do not sync console path
+    "syncConsolePath"       : false,    // do not sync console path
     "terminal"              : false,    // disable terminal
-    "terminalPath"          : '',       // path of a terminal
-    "terminalCommand"       : '',       // set command to run in terminal
+    "terminalPath"          : "",       // path of a terminal
+    "terminalCommand"       : "",       // set command to run in terminal
     "terminalAutoRestart"   : true,     // restart command on exit
     "vim"                   : false,    // disable vim hot keys
     "columns"               : "name-size-date-owner-mode", // set visible columns
     "export"                : false,    // enable export of config through a server
     "exportToken"           : "root",   // token used by export server
-    "import"                : false,    // enable import of config 
+    "import"                : false,    // enable import of config
     "import-url"            : "http://localhost:8000",   // url of an export server
     "importToken"           : "root",   // token used to connect to export server
     "importListen"          : false,    // listen on config updates
     "dropbox"               : false,    // disable dropbox integration
     "dropboxToken"          : "",       // unset dropbox token
-    "log"                   : true,     // logging
+    "log"                   : true     // logging
 }
 ```
 
@@ -428,7 +423,7 @@ Some config options can be overridden with environment variables, such as:
 - `CLOUDCMD_NAME` - set tab name in web browser
 - `CLOUDCMD_OPEN` - open web browser when server started
 - `CLOUDCMD_EDITOR` - set editor
-- `CLOUDCMD_COLUMNS` - set visible columns 
+- `CLOUDCMD_COLUMNS` - set visible columns
 - `CLOUDCMD_CONTACT` - enable contact
 - `CLOUDCMD_CONFIG_DIALOG` - enable config dialog
 - `CLOUDCMD_CONFIG_AUTH` - enable auth change in config dialog
@@ -463,10 +458,10 @@ When you press `F2` Cloud Commander will read a file `.cloudcmd.menu.js` by walk
 Let's consider example `user menu` works file:
 
 ```js
-const RENAME_FILE= 'Rename file';
+const RENAME_FILE = 'Rename file';
 
-module.exports = {
-    __settings: {
+export default {
+    '__settings': {
         select: [
             RENAME_FILE,
         ],
@@ -613,8 +608,8 @@ The *export server* omits the following configuration fields:
 - `log`
 - `configDialog`
 
-Menu
----------------
+## Menu
+
 ![Menu](/img/screen/menu.png "Menu")
 
 Right-mouse click to show a context menu with these items:
@@ -643,14 +638,13 @@ Right-mouse click to show a context menu with these items:
 | `F9`                  | open
 | `Esc`                 | close
 
-One file panel
----------------
+## One file panel
+
 Cloud Commander can work in one panel mode when your screen size can't accommodate a second panel (such as on mobile or tablet), or via the `--one-file-panel` options flag.
 
 ![One file panel](/img/screen/one-file-panel.png "One file panel")
 
-Using as middleware
----------------
+## Using as middleware
 
 Cloud Commander can be used as middleware for `node.js` applications based on [socket.io](http://socket.io "Socket.IO") and [express](http://expressjs.com "Express"):
 
@@ -669,29 +663,30 @@ npm i cloudcmd express socket.io -S
 And create `index.js`:
 
 ```js
-const http = require('http');
-const cloudcmd = require('cloudcmd');
-const io = require('socket.io');
-const app = require('express')();
+import http from 'http';
+import cloudcmd from 'cloudcmd';
+import io from 'socket.io';
+import express from 'express';
 
+const app = express();
 const port = 1337;
 const prefix = '/';
 
 const server = http.createServer(app);
 const socket = io.listen(server, {
-    path: `${prefix}socket.io`
+    path: `${prefix}socket.io`,
 });
 
 const config = {
-    name: 'cloudcmd :)'
+    name: 'cloudcmd :)',
 };
 
 const filePicker = {
     data: {
         FilePicker: {
-            key: 'key'
-        }
-    }
+            key: 'key',
+        },
+    },
 };
 
 // override option from json/modules.json
@@ -706,14 +701,14 @@ const {
 
 const configManager = createConfigManager({
     configPath,
-}),
+});
 
 app.use(prefix, cloudcmd({
-    socket,  // used by Config, Edit (optional) and Console (required)
-    config,  // config data (optional)
+    socket, // used by Config, Edit (optional) and Console (required)
+    config, // config data (optional)
     modules, // optional
     configManager, // optional
-));
+}));
 
 server.listen(port);
 ```
@@ -721,9 +716,9 @@ server.listen(port);
 Here is example with two `Config Managers`:
 
 ```js
-const http = require('http');
-const cloudcmd = require('cloudcmd');
-const io = require('socket.io');
+import http from 'http';
+import cloudcmd from 'cloudcmd';
+import io from 'socket.io';
 const app = require('express')();
 
 const port = 8000;
@@ -734,11 +729,11 @@ const {createConfigManager} = cloudcmd;
 
 const server = http.createServer(app);
 const socket1 = io.listen(server, {
-    path: `${prefix1}/socket.io`
+    path: `${prefix1}/socket.io`,
 });
 
 const socket2 = io.listen(server, {
-    path: `${prefix2}/socket.io`
+    path: `${prefix2}/socket.io`,
 });
 
 const configManager1 = createConfigManager();
@@ -763,7 +758,7 @@ server.listen(port);
 If you want to enable authorization, you can pass credentials to Cloud Commander with a config. To generate a password, you can install `criton` with `npm i criton --save`, and use it (or any other way) to generate a hash of a password.
 
 ```js
-const criton = require('criton');
+import criton from 'criton';
 const algo = 'sha512WithRSAEncryption'; // default
 
 // you can generate a hash dynamically
@@ -779,8 +774,8 @@ const config = {
     algo, // optional
     auth,
     username,
-    pasword,
-}
+    password,
+};
 ```
 
 Now you're ready to go!
@@ -797,8 +792,8 @@ cloudcmd --username name --password password --auth --save --no-server
 
 This command will create hash of your password and write it to `~/.cloudcmd.json`.
 
-Server
----------------
+## Server
+
 Standard practices dictate that no non-root process get to talk to the internet on a port less than 1024. Despite this, **I suggest you start Cloud Commander as a non-root process**. How can we get around this limitation? There's a couple of fast & easy ways. One of them is port forwarding:
 
 ### Iptables
@@ -819,6 +814,7 @@ target     prot opt source               destination
 REDIRECT   tcp  --  anywhere             anywhere             tcp dpt:http redir ports 8000
 REDIRECT   tcp  --  anywhere             anywhere             tcp dpt:https redir ports 4430
 ```
+
 If you would want to get things back just clear rules (rule numbers **1** and **2**; in your list they could differ).
 
 ```sh
@@ -827,6 +823,7 @@ iptables -t nat -D PREROUTING 1
 ```
 
 ### nginx
+
 Get [nginx](http://nginx.org/ "nginx"). On Linux, you can run:
 
 ```sh
@@ -877,7 +874,6 @@ For WebSocket support, (nginx >= v1.3.13) modify the `server` block like so:
     }
 ```
 
-
 If you need redirection from **http** to **https**, simply use:
 
 ```sh
@@ -896,14 +892,14 @@ ln -s ./sites-available/io.cloudcmd.io ./sites-enabled
 /etc/init.d/nginx restart
 ```
 
-Deploy
----------------
+## Deploy
+
 `Cloud Commander` can be easily deployed to [Heroku](https://heroku.com/deploy?template=https://github.com/coderaiser/cloudcmd "Deploy to Heroku").
 
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png "Deploy to Heroku")]( https://heroku.com/deploy?template=https://github.com/coderaiser/cloudcmd)
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png "Deploy to Heroku")](https://heroku.com/deploy?template=https://github.com/coderaiser/cloudcmd)
 
-Docker
----------------
+## Docker
+
 `Cloud Commander` can be used as [docker container](https://hub.docker.com/r/coderaiser/cloudcmd/ "Docker container") like so:
 
 ```sh
@@ -951,17 +947,35 @@ While using Dropbox remember that there is no remote support for the console/ter
 - view
 - edit
 
-Get involved
----------------
+## Get involved
 
 There are a lot of ways to be involved in `Cloud Commander` development:
 
+- support project on patreon: https://patreon.com/coderaiser;
 - if you find a bug or have an idea to share, [create an issue](https://github.com/coderaiser/cloudcmd/issues/new "Create issue");
 - if you fixed a bug, typo or implemented a new feature, [create a pull request](https://github.com/coderaiser/cloudcmd/compare "Create pull request");
 - if you know a language not currently translated, or would like to improve an existing translation, you can help with [site translations](https://github.com/coderaiser/cloudcmd/wiki "Cloud Commander community wiki");
 
-Version history
----------------
+## Version history
+- *2021.02.03*, **[v15.6.0](//github.com/coderaiser/cloudcmd/releases/tag/v15.6.0)**
+- *2021.02.02*, **[v15.5.2](//github.com/coderaiser/cloudcmd/releases/tag/v15.5.2)**
+- *2021.01.31*, **[v15.5.1](//github.com/coderaiser/cloudcmd/releases/tag/v15.5.1)**
+- *2021.01.30*, **[v15.5.0](//github.com/coderaiser/cloudcmd/releases/tag/v15.5.0)**
+- *2021.01.26*, **[v15.4.4](//github.com/coderaiser/cloudcmd/releases/tag/v15.4.4)**
+- *2021.01.25*, **[v15.4.3](//github.com/coderaiser/cloudcmd/releases/tag/v15.4.3)**
+- *2021.01.21*, **[v15.4.2](//github.com/coderaiser/cloudcmd/releases/tag/v15.4.2)**
+- *2021.01.20*, **[v15.4.1](//github.com/coderaiser/cloudcmd/releases/tag/v15.4.1)**
+- *2021.01.19*, **[v15.4.0](//github.com/coderaiser/cloudcmd/releases/tag/v15.4.0)**
+- *2021.01.19*, **[v15.3.4](//github.com/coderaiser/cloudcmd/releases/tag/v15.3.4)**
+- *2021.01.17*, **[v15.3.1](//github.com/coderaiser/cloudcmd/releases/tag/v15.3.1)**
+- *2021.01.17*, **[v15.3.0](//github.com/coderaiser/cloudcmd/releases/tag/v15.3.0)**
+- *2021.01.16*, **[v15.2.0](//github.com/coderaiser/cloudcmd/releases/tag/v15.2.0)**
+- *2021.01.07*, **[v15.1.0](//github.com/coderaiser/cloudcmd/releases/tag/v15.1.0)**
+- *2021.01.05*, **[v15.0.4](//github.com/coderaiser/cloudcmd/releases/tag/v15.0.4)**
+- *2020.01.05*, **[v15.0.3](//github.com/coderaiser/cloudcmd/releases/tag/v15.0.3)**
+- *2020.12.31*, **[v15.0.2](//github.com/coderaiser/cloudcmd/releases/tag/v15.0.2)**
+- *2020.12.30*, **[v15.0.1](//github.com/coderaiser/cloudcmd/releases/tag/v15.0.1)**
+- *2020.12.28*, **[v15.0.0](//github.com/coderaiser/cloudcmd/releases/tag/v15.0.0)**
 - *2020.08.21*, **[v14.9.3](//github.com/coderaiser/cloudcmd/releases/tag/v14.9.3)**
 - *2020.08.19*, **[v14.9.2](//github.com/coderaiser/cloudcmd/releases/tag/v14.9.2)**
 - *2020.08.16*, **[v14.9.1](//github.com/coderaiser/cloudcmd/releases/tag/v14.9.1)**
@@ -1330,12 +1344,11 @@ Version history
 - *2012.07.11*, **[v0.1.1](//github.com/cloudcmd/archive/raw/master/cloudcmd-v0.1.1.zip)**
 - *2012.07.09*, **[v0.1.0](//github.com/cloudcmd/archive/raw/master/cloudcmd-v0.1.0.zip)**
 
-Special Thanks
----------------
-- [Olena Zalitok](https://zalitok.github.io/ "Olena Zalitok") for **logo** and **favicon**.
-- [TarZak](https://github.com/tarzak "TarZak")
-    - Russian and Ukrainian translations;
-    - config template and style;
-    - change order of directories and files;
-    - add ability to keep path and header when files are scrolling;
+## Special Thanks
 
+- [Olena Zalitok](http://www.linkedin.com/in/olena-zalitok-ux-designer "Olena Zalitok") for **logo** and **favicon**.
+- [TarZak](https://github.com/tarzak "TarZak")
+  - Russian and Ukrainian translations;
+  - config template and style;
+  - change order of directories and files;
+  - add ability to keep path and header when files are scrolling;

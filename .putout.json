@@ -1,33 +1,32 @@
 {
     "ignore": [
-        "fixture*"
+        "html",
+        "fixture*",
+        "app.json",
+        "fontello.json"
     ],
     "match": {
+        "*.js": {
+            "convert-esm-to-commonjs": "on"
+        },
+        "*.md": {
+            "convert-commonjs-to-esm": "on"
+        },
         ".webpack": {
             "webpack": "on"
         },
         "server": {
             "remove-process-exit": "on"
         },
-        "server/(server|exit).js": {
+        "server/{server,exit}.js": {
             "remove-process-exit": "off",
             "remove-console": "off"
         },
-        "server/(terminal|distribute/log).js": {
+        "server/{terminal,distribute/log}.js": {
             "remove-console": "off"
         },
-        "client/(client|cloudcmd|load-module).js": {
+        "client/{client,cloudcmd,load-module}.js": {
             "remove-console": "off"
-        },
-        "client/modules/config/index.js": {
-            "apply-shorthand-properties": [{
-                "ignore": [
-                    "ONE_MINUTE"
-                ]
-            }]
-        },
-        "view.js": {
-            "apply-shorthand-properties": "off"
         },
         "test/common/cloudfunc.js": {
             "remove-console": "off"

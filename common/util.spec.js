@@ -2,7 +2,9 @@
 
 const test = require('supertape');
 const {reRequire} = require('mock-require');
+const tryCatch = require('try-catch');
 const Util = require('./util');
+
 const {
     findObjByNameInArr,
     getRegExp,
@@ -35,13 +37,16 @@ test('util: getExt: no name', (t) => {
 });
 
 test('util: findObjByNameInArr: no array', (t) => {
-    t.throws(findObjByNameInArr, /array should be array!/, 'should throw when no array');
+    const [error] = tryCatch(findObjByNameInArr);
+    
+    t.equal(error.message, 'array should be array!', 'should throw when no array');
     t.end();
 });
 
 test('util: findObjByNameInArr: no name', (t) => {
-    const fn = () => findObjByNameInArr([]);
-    t.throws(fn, /name should be string!/, 'should throw when no name');
+    const [error] = tryCatch(findObjByNameInArr, []);
+    
+    t.equal(error.message, 'name should be string!', 'should throw when no array');
     t.end();
 });
 
@@ -89,7 +94,7 @@ test('util: findObjByNameInArr: array', (t) => {
 test('util: getRegExp', (t) => {
     const reg = getRegExp('hel?o.*');
     
-    t.deepEqual(reg, RegExp('^hel.?o\\..*$'), 'should return regexp');
+    t.deepEqual(reg, /^hel.?o\..*$/, 'should return regexp');
     t.end();
 });
 
@@ -103,7 +108,7 @@ test('util: getRegExp: dots', (t) => {
 test('util: getRegExp: no', (t) => {
     const reg = getRegExp('');
     
-    t.deepEqual(reg, RegExp('^$'), 'should return regexp');
+    t.deepEqual(reg, /^$/, 'should return regexp');
     t.end();
 });
 

@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const tryCatch = require('try-catch');
 
 const DIR = __dirname + '/../../';
 const COMMONDIR = DIR + 'common/';
@@ -33,19 +34,19 @@ const TMPL = [
 ].map(addHBS);
 
 const data = {
-    path  : '/etc/X11/',
-    files : [{
+    path: '/etc/X11/',
+    files: [{
         name: 'applnk',
         size: '4.0.0kb',
         date: '21.02.2016',
-        uid : 0,
+        uid: 0,
         mode: 'rwx r-x r-x',
         type: 'directory',
     }, {
         name: 'ай',
         size: '1.30kb',
         date: 0,
-        uid : 0,
+        uid: 0,
         mode: 'rwx r-x r-x',
         type: 'file',
     }],
@@ -72,7 +73,7 @@ test('cloudfunc: render', (t) => {
     
     time('CloudFunc.buildFromJSON');
     const result = CloudFunc.buildFromJSON({
-        prefix  : '',
+        prefix: '',
         data,
         template,
     });
@@ -104,9 +105,9 @@ test('cloudfunc: render', (t) => {
         console.log('buildFromJSON: Not OK');
     }
     
-    t.equal(Expect, result, 'should be equal rendered json data');
+    t.equal(result, Expect, 'should be equal rendered json data');
     
-    htmlLooksLike(Expect, result);
+    htmlLooksLike(result, Expect);
     
     t.end();
 });
@@ -181,16 +182,18 @@ test('cloudfunc: getHeaderField', (t) => {
 });
 
 test('cloudfunc: getPathLink: no url', (t) => {
-    t.throws(CloudFunc.getPathLink, 'should throw when no url');
+    const [error] = tryCatch(CloudFunc.getPathLink);
+    
+    t.ok(error, 'should throw when no url');
     t.end();
 });
 
 test('cloudfunc: getPathLink: no template', (t) => {
     const url = 'http://abc.com';
     const prefix = '';
-    const fn = () => CloudFunc.getPathLink(url, prefix);
+    const [error] = tryCatch(CloudFunc.getPathLink, url, prefix);
     
-    t.throws(fn, 'should throw when no template');
+    t.ok(error, 'should throw when no template');
     t.end();
 });
 

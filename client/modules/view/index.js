@@ -2,30 +2,34 @@
 
 /* global CloudCmd, DOM */
 
-require('../../css/view.css');
+require('../../../css/view.css');
 
 const rendy = require('rendy');
 const currify = require('currify');
 const wraptile = require('wraptile');
 const tryToCatch = require('try-to-catch');
+const load = require('load.js');
 
 const modal = require('@cloudcmd/modal');
 const createElement = require('@cloudcmd/create-element');
 
-const {time} = require('../../common/util');
-const {FS} = require('../../common/cloudfunc');
+const {time} = require('../../../common/util');
+const {FS} = require('../../../common/cloudfunc');
+const {
+    isImage,
+    isAudio,
+    getType,
+} = require('./types');
 
-const Files = require('../dom/files');
-const Events = require('../dom/events');
-const load = require('load.js');
-const Images = require('../dom/images');
+const Files = require('../../dom/files');
+const Events = require('../../dom/events');
+const Images = require('../../dom/images');
 
-const {encode} = require('../../common/entity');
+const {encode} = require('../../../common/entity');
 
 const {assign} = Object;
 const {isArray} = Array;
 
-const testRegExp = currify((name, reg) => reg.test(name));
 const lifo = currify((fn, el, cb, name) => fn(name, el, cb));
 const series = wraptile((...a) => {
     for (const f of a)
@@ -36,7 +40,6 @@ const isFn = (a) => typeof a === 'function';
 
 const noop = () => {};
 const addEvent = lifo(Events.add);
-const getRegExp = (ext) => RegExp(`\\.${ext}$`, 'i');
 
 const loadCSS = load.css;
 
@@ -79,6 +82,7 @@ const Config = {
         title: {},
     },
 };
+module.exports._Config = Config;
 
 module.exports.init = async () => {
     await loadAll();
@@ -91,7 +95,7 @@ module.exports.init = async () => {
     events.forEach(addEvent(Overlay, onOverlayClick));
 };
 
-async function show(data, options) {
+async function show(data, options = {}) {
     const prefixURL = CloudCmd.prefixURL + FS;
     
     if (Loading)
@@ -120,24 +124,31 @@ async function show(data, options) {
     Images.show.load();
     
     const path = prefixURL + Info.path;
-    const type = getType(path);
+    const type = options.raw ? '' : await getType(path);
     
     switch(type) {
     default:
-        return viewFile();
+        return await viewFile();
+    
+    case 'markdown':
+        return await CloudCmd.Markdown.show(Info.path);
+    
+    case 'html':
+        return viewHtml(path);
     
     case 'image':
-        return viewImage(prefixURL);
+        return viewImage(Info.path, prefixURL);
     
     case 'media':
-        return viewMedia(path);
+        return await viewMedia(path);
     
     case 'pdf':
         return viewPDF(path);
     }
 }
 
-function viewPDF(src) {
+module.exports._createIframe = createIframe;
+function createIframe(src) {
     const element = createElement('iframe', {
         src,
         width: '100%',
@@ -147,6 +158,17 @@ function viewPDF(src) {
     element.addEventListener('load', () => {
         element.contentWindow.addEventListener('keydown', listener);
     });
+    
+    return element;
+}
+
+module.exports._viewHtml = viewHtml;
+function viewHtml(src) {
+    modal.open(createIframe(src), Config);
+}
+
+function viewPDF(src) {
+    const element = createIframe(src);
     
     const options = assign({}, Config);
     
@@ -177,20 +199,20 @@ async function viewMedia(path) {
     modal.open(element, allConfig);
 }
 
-function viewFile() {
-    Info.getData((error, data) => {
-        if (error)
-            return Images.hide();
-        
-        const element = document.createTextNode(data);
-        const options = Config;
-        
-        if (CloudCmd.config('showFileName'))
-            options.title = Info.name;
-        
-        El.append(element);
-        modal.open(El, options);
-    });
+async function viewFile() {
+    const [error, data] = await Info.getData();
+    
+    if (error)
+        return Images.hide();
+    
+    const element = document.createTextNode(data);
+    const options = Config;
+    
+    if (CloudCmd.config('showFileName'))
+        options.title = Info.name;
+    
+    El.append(element);
+    modal.open(El, options);
 }
 
 const copy = (a) => assign({}, a);
@@ -223,17 +245,18 @@ function hide() {
     modal.close();
 }
 
-function viewImage(prefixURL) {
+function viewImage(path, prefixURL) {
+    const isSupportedImage = (a) => isImage(a) || a === path;
     const makeTitle = (path) => {
         return {
-            href: prefixURL + path,
+            href: `${prefixURL}${path}`,
             title: encode(basename(path)),
         };
     };
     
     const names = Info.files
         .map(DOM.getCurrentPath)
-        .filter(isImage);
+        .filter(isSupportedImage);
     
     const titles = names
         .map(makeTitle);
@@ -255,47 +278,6 @@ function viewImage(prefixURL) {
     };
     
     modal.open(titles, config);
-}
-
-function isImage(name) {
-    const images = [
-        'jp(e|g|eg)',
-        'gif',
-        'png',
-        'bmp',
-        'webp',
-        'svg',
-        'ico',
-    ];
-    
-    return images
-        .map(getRegExp)
-        .some(testRegExp(name));
-}
-
-function isMedia(name) {
-    return isAudio(name) || isVideo(name);
-}
-
-function isAudio(name) {
-    return /\.(mp3|ogg|m4a)$/i.test(name);
-}
-
-function isVideo(name) {
-    return /\.(mp4|avi|webm)$/i.test(name);
-}
-
-const isPDF = (name) => /\.(pdf)$/i.test(name);
-
-function getType(name) {
-    if (isPDF(name))
-        return 'pdf';
-    
-    if (isImage(name))
-        return 'image';
-    
-    if (isMedia(name))
-        return 'media';
 }
 
 async function getMediaElement(src) {

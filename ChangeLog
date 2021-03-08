@@ -1,3 +1,238 @@
+2021.03.01, v15.9.1
+
+feature:
+- (cloudcmd) icons: add archive icon for small screens
+- (cloudcmd) add archive-link image
+
+
+2021.03.01, v15.9.0
+
+feature:
+- feature(cloudcmd) add archive icon
+- feature(client) rm unused loadCurrentTime
+- feature(package) win32 v6.0.0
+- feature(package) redzip v2.0.0
+
+
+
+2021.02.27, v15.8.1
+
+feature:
+- (package) restafary v9.7.0 (#330)
+
+
+2021.02.23, v15.8.0
+
+feature:
+- (cloudcmd) add ability to suggest option, when wrong provided
+- (package) supertape v5.0.0
+
+
+2021.02.21, v15.7.1
+
+fix:
+- (cloudcmd) prefix env has no effect (#328)
+
+
+2021.02.19, v15.7.0
+
+fix:
+- chore(github-actions) add ability to autofix lint
+
+feature:
+- (package) @cloudcmd/move-files v4.0.0
+- (package) putout v15.0.0
+- (package) copymitter v6.0.0
+- (package) @cloudcmd/olark v3.0.2
+- (client) view: unknown file type: method: GET -> HEAD: speed up
+
+
+2021.02.03, v15.6.0
+
+feature:
+- (client) view: add ability to detect file type when extension is missing (coderaiser/cloudcmd#287)
+
+
+2021.02.02, v15.5.2
+
+fix:
+- (client) view: isAudio (#322)
+
+
+2021.01.31, v15.5.1
+
+fix:
+- (cloudcmd) cannot create a directory (#319)
+
+
+2021.01.30, v15.5.0
+
+feature:
+- (package) style-loader v2.0.0
+- (cloudcmd) improve error handling when viewing or editing a file
+- (package) putout v14.0.0
+- (package) eslint-plugin-putout v7.0.0
+
+
+2021.01.26, v15.4.4
+
+feature:
+- (package) win32 v5.1.11
+
+
+2021.01.25, v15.4.3
+
+feature:
+- (package) restbox v3.0.0
+- (package) ponse v6.0.0
+- (package) files-io v4.0.0
+
+
+2021.01.21, v15.4.2
+
+feature:
+- (package) mellow v3.0.0
+- (route) tokenize -> wraptile
+
+
+2021.01.20, v15.4.1
+
+feature:
+- (route) redzip -> win32 (#317)
+
+
+2021.01.19, v15.4.0
+
+feature:
+- (cloudcmd) add abilit to parse markdown inside zip archives
+
+
+2021.01.19, v15.3.4
+
+fix:
+- (docker) images: change alpine images to be part of master image (#316)
+- (dom) bug in Firefox with Imagus extension enabled: change getCurrentName to read from `data-name` instead of `title` (#313)
+
+feature:
+- (package) deepword v8.0.0
+- (package) console-io v13.0.0
+- (package) edward v13.0.0
+- (docker) add support of multi-arch builds (#291)
+
+
+2021.01.18, v15.3.3
+
+fix:
+- (dom) bug in Firefox with Imagus extension enabled: change getCurrentName to read from `data-name` instead of `title` (#313)
+- (client) dom: goToDirectory
+
+
+2021.01.18, v15.3.2
+
+fix:
+- (client) dom: goToDirectory
+
+
+2021.01.17, v15.3.1
+
+fix:
+- (view) view html, pdf
+
+feature:
+- (package) dword v13.0.0
+- (modules) socket.io v3.1.0
+
+
+2021.01.17, v15.3.0
+
+feature:
+- (client) improve vim support: Esc - toggle vim support in editors
+- (client) view: add ability to view raw files using Shift + F3
+- (client) view: show markdown without shift
+- (key) add ability to toggle global vim config on the time of session
+
+
+2021.01.16, v15.2.0
+
+fix:
+- (server) distribute: simplify colors
+
+feature:
+- (cloudcmd) add ability to open html files using F3
+- (cloudcmd) add ability to toggle vim hotkes using Esc
+- (package) @cloudcmd/fileop v5.0.0
+
+
+2021.01.07, v15.1.0
+
+feature:
+- (cloudcmd) add ability to read zip files like directories (#309)
+
+
+2021.01.05, v15.0.4
+
+feature:
+- (package) flop v9.0.0
+- (package) restafary v9.0.1
+
+
+2021.01.05, v15.0.3
+
+fix:
+- (cloudcmd) validateRoot: import -> simport: forEachKey is not a function (#311)
+
+feature:
+- (package) onezip v5.0.0
+- (package) socket.io v3.0.5 (socketio/socket.io#3720)
+
+
+2020.12.31, v15.0.2
+
+fix:
+- (cloudcmd) criton: crash when password set (#310)
+
+
+2020.12.30, v15.0.1
+
+fix:
+- (cloudcmd) css: media query for screen size with width more then 1600 (cloudcmd/console-io#6)
+- (cloudcmd) client: build: optional chaining
+- (cloudcmd) drop support of node < 14
+
+feature:
+- (package) putout v13.0.0
+
+
+2020.12.28, v15.0.0
+
+fix:
+- (cloudcmd) app, help: remove duplicate keys
+- chore(cloudcmd) menu: add lint, :lint, test, coverage
+- (cloudcmd) importListen prevent server from start (#295)
+
+feature:
+- (package) auto-globals v2.0.0
+- (cloudcmd) convert to EcmaScriptModules
+- (package) supertape v4.1.0
+- (package) supertape v3.10.0
+- (package) babel-plugin-macros v3.0.0
+- (package) putout v12.0.0
+- (package) supertape v3.1.3
+- (package) madrun v8.0.0
+- (package) gritty v6.0.0
+- (package) console-io v12.0.0
+- (package) socket.io-client v3.0.1
+- (package) socket.io v3.0.1
+- (package) putout v11.0.2
+- (package) eslint-plugin-putout v6.0.0
+- (package) markdown-it v12.0.0
+- (package) putout v10.0.0
+- (package) gritty v5.0.0
+- (distribute) import: do not import if env variable set
+- (package) drop support of node < 12
+- (package) table v6.0.1
+
+
 2020.08.21, v14.9.3
 
 fix:

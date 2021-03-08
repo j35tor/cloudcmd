@@ -7,6 +7,7 @@ const {
 } = require('path');
 
 const {EnvironmentPlugin} = require('webpack');
+const WebpackBar = require('webpackbar');
 
 const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin');
 
@@ -29,10 +30,7 @@ const clean = (array) => array.filter(notEmpty);
 const noParse = (a) => /\.spec\.js$/.test(a);
 
 const options = {
-    babelrc: false,
-    plugins: [
-        'module:babel-plugin-macros',
-    ],
+    babelrc: true,
 };
 
 const rules = clean([
@@ -57,6 +55,8 @@ const plugins = [
         entry: join(__dirname, '..', 'client', 'sw', 'sw.js'),
         excludes: ['*'],
     }),
+    
+    new WebpackBar(),
 ];
 
 const splitChunks = {
@@ -80,7 +80,7 @@ module.exports = {
         [modules + '/edit-names']: `${dirModules}/edit-names.js`,
         [modules + '/edit-names-vim']: `${dirModules}/edit-names-vim.js`,
         [modules + '/menu']: `${dirModules}/menu.js`,
-        [modules + '/view']: `${dirModules}/view.js`,
+        [modules + '/view']: `${dirModules}/view/index.js`,
         [modules + '/help']: `${dirModules}/help.js`,
         [modules + '/markdown']: `${dirModules}/markdown.js`,
         [modules + '/config']: `${dirModules}/config/index.js`,

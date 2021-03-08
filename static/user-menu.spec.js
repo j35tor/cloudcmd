@@ -41,7 +41,7 @@ test('cloudcmd: static: user menu: IO.write', async (t) => {
     });
     
     const path = '/.cloudcmd.menu.js';
-    t.ok(write.calledWith(path, _data), 'should call IO.write');
+    t.calledWith(write, [path, _data], 'should call IO.write');
     t.end();
 });
 
@@ -72,7 +72,7 @@ test('cloudcmd: static: user menu: setCurrentByName', async (t) => {
     });
     
     const fileName = '.cloudcmd.menu.js';
-    t.ok(setCurrentByName.calledWith(fileName), 'should call DOM.setCurrentByName');
+    t.calledWith(setCurrentByName, [fileName], 'should call DOM.setCurrentByName');
     t.end();
 });
 
@@ -120,11 +120,11 @@ test('cloudcmd: static: user menu: compare directories', async (t) => {
     });
     
     const {files} = DOM.CurrentInfo.files;
-    t.ok(DOM.getFilenames.calledWith(files), 'should call getFilenames');
+    t.calledWith(DOM.getFilenames, [files], 'should call getFilenames');
     t.end();
 });
 
-test('cloudcmd: static: user menu: compare directories: select names', async (t) => {
+test('cloudcmd: static: user menu: compare directories: select names', (t) => {
     const {_selectNames} = defaultMenu;
     const selectFile = stub();
     const file = {};
@@ -138,11 +138,11 @@ test('cloudcmd: static: user menu: compare directories: select names', async (t)
         getCurrentByName,
     });
     
-    t.ok(selectFile.calledWith(file), 'should call selectFile');
+    t.calledWith(selectFile, [file], 'should call selectFile');
     t.end();
 });
 
-test('cloudcmd: static: user menu: compare directories: select names: getCurrentByName', async (t) => {
+test('cloudcmd: static: user menu: compare directories: select names: getCurrentByName', (t) => {
     const {_selectNames} = defaultMenu;
     const selectFile = stub();
     const getCurrentByName = stub();
@@ -156,11 +156,11 @@ test('cloudcmd: static: user menu: compare directories: select names: getCurrent
         getCurrentByName,
     });
     
-    t.ok(getCurrentByName.calledWith(name, panel), 'should call selectFile');
+    t.calledWith(getCurrentByName, [name, panel], 'should call selectFile');
     t.end();
 });
 
-test('cloudcmd: static: user menu: compare directories: select names: compare', async (t) => {
+test('cloudcmd: static: user menu: compare directories: select names: compare', (t) => {
     const {_compare} = defaultMenu;
     const a = [1, 2];
     const b = [1, 3];

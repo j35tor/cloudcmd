@@ -38,12 +38,12 @@ test('cloudcmd: terminal: enabled', (t) => {
     const terminal = require(terminalPath);
     terminal(arg);
     
-    t.ok(term.calledWith(arg), 'should call terminal');
+    t.calledWith(term, [arg], 'should call terminal');
     t.end();
 });
 
 test('cloudcmd: terminal: enabled: no string', (t) => {
-    const {log:originalLog} = console;
+    const {log: originalLog} = console;
     const log = stub();
     
     console.log = log;

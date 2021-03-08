@@ -4,34 +4,48 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    env:
+      NAME: cloudcmd
 
     steps:
-    - uses: actions/checkout@master
-    - name: Use Node.js 14.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 14.x
-    
-    - name: install
-      run: |
-        npm install
-    
-    - name: lint
-      run: |
-        npm run lint
-    
-    - name: build
-      run: |
-        npm run build
-        npm test
-    
-    - name: test
-      run: |
-        npm test
+      - uses: actions/checkout@master
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
 
-    - name: coverage
-      run: |
-        npm run coverage
+      - name: Install Redrun
+        run:
+          npm i redrun -g
+      
+      - name: Install
+        run:
+          npm install
+
+      - name: Lint
+        run:
+          redrun fix:lint
+    
+      - name: Commit fixes
+        uses: EndBug/add-and-commit@v7
+        with:
+          message: 'chore(${{ env.NAME }}) lint using actions'
+
+      - name: Build
+        run:
+          redrun build
+
+      - name: Test
+        run:
+          redrun test
+
+      - name: Coverage
+        run:
+          redrun coverage coverage:report
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 

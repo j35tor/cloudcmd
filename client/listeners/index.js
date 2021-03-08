@@ -17,14 +17,16 @@ const {FS} = require('../../common/cloudfunc');
 const NBSP_REG = RegExp(String.fromCharCode(160), 'g');
 const SPACE = ' ';
 
-module.exports.init = () => {
-    contextMenu();
-    dragndrop();
-    unload();
-    pop();
-    resize();
-    config();
-    header();
+module.exports.init = async () => {
+    await Promise.all([
+        contextMenu(),
+        dragndrop(),
+        unload(),
+        pop(),
+        resize(),
+        header(),
+        config(),
+    ]);
 };
 
 CloudCmd.Listeners = module.exports;
@@ -101,7 +103,7 @@ function getPath(el, path = []) {
 
 async function config() {
     const [, config] = await tryToCatch(DOM.Files.get, 'config');
-    const type = config && config.packer;
+    const type = config?.packer;
     
     EXT = DOM.getPackerExt(type);
 }
@@ -265,21 +267,18 @@ function changePanel(element) {
 }
 
 async function onDblClick(event) {
+    event.preventDefault();
+    
     const current = getLIElement(event.target);
     const isDir = DOM.isCurrentIsDir(current);
     const path = DOM.getCurrentPath(current);
     
-    if (isDir) {
-        await CloudCmd.loadDir({
-            path: path === '/' ? '/' : path + '/',
-        });
-        
-        event.preventDefault();
-    } else {
-        CloudCmd.View.show();
-        
-        event.preventDefault();
-    }
+    if (!isDir)
+        return CloudCmd.View.show();
+    
+    await CloudCmd.loadDir({
+        path,
+    });
 }
 
 async function onTouch(event) {
@@ -459,7 +458,7 @@ function dragndrop() {
 function unload() {
     DOM.Events.add(['unload', 'beforeunload'], (event) => {
         const {Key} = CloudCmd;
-        const isBind = Key && Key.isBind();
+        const isBind = Key?.isBind();
         
         if (isBind)
             return;

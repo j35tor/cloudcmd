@@ -237,7 +237,7 @@ test('distribute: import: env', async (t) => {
     const result = configManagerImport('editor');
     const expected = 'deepword';
     
-    t.equal(expected, result);
+    t.equal(result, expected);
     t.end();
 });
 
@@ -281,6 +281,6 @@ test('distribute: import: no env', async (t) => {
     const result = configManagerImport('editor');
     const expected = 'edward';
     
-    t.equal(expected, result);
+    t.equal(result, expected);
     t.end();
 });

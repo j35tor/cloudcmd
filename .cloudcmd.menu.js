@@ -31,7 +31,7 @@ module.exports = {
     'P - Build Prod': async ({CloudCmd}) => {
         const {TerminalRun} = CloudCmd;
         
-        run(TerminalRun, 'npm run build:client'),
+        await run(TerminalRun, 'npm run build:client');
         CloudCmd.refresh();
     },
 };

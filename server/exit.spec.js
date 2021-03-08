@@ -5,25 +5,25 @@ const exit = require('./exit');
 const stub = require('@cloudcmd/stub');
 
 test('cloudcmd: exit: process.exit', (t) => {
-    const {exit:exitOriginal} = process;
+    const {exit: exitOriginal} = process;
     process.exit = stub();
     
     exit();
-    t.ok(process.exit.calledWith(1), 'should call process.exit');
+    t.calledWith(process.exit, [1], 'should call process.exit');
     process.exit = exitOriginal;
     
     t.end();
 });
 
 test('cloudcmd: exit: console.error', (t) => {
-    const {exit:exitOriginal} = process;
+    const {exit: exitOriginal} = process;
     const {error} = console;
     
     console.error = stub();
     process.exit = stub();
     
     exit('hello world');
-    t.ok(console.error.calledWith('hello world'), 'should call console.error');
+    t.calledWith(console.error, ['hello world'], 'should call console.error');
     
     process.exit = exitOriginal;
     console.error = error;
@@ -32,14 +32,14 @@ test('cloudcmd: exit: console.error', (t) => {
 });
 
 test('cloudcmd: exit.error: console.error: error', (t) => {
-    const {exit:exitOriginal} = process;
+    const {exit: exitOriginal} = process;
     const {error} = console;
     
     console.error = stub();
     process.exit = stub();
     
     exit(Error('hello world'));
-    t.ok(console.error.calledWith('hello world'), 'should call console.error');
+    t.calledWith(console.error, ['hello world'], 'should call console.error');
     
     process.exit = exitOriginal;
     console.error = error;

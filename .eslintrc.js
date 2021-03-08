@@ -8,6 +8,9 @@ module.exports = {
         'putout',
         'node',
     ],
+    rules: {
+        'key-spacing': 'off',
+    },
     overrides: [{
         files: ['bin/release.js'],
         rules: {
@@ -18,6 +21,11 @@ module.exports = {
             'plugin:node/recommended',
         ],
     }, {
+        files: ['client/dom/index.js'],
+        rules: {
+            'no-multi-spaces': 'off',
+        },
+    }, {
         files: ['bin/cloudcmd.js'],
         rules: {
             'no-console': 'off',
@@ -26,7 +34,7 @@ module.exports = {
             'plugin:node/recommended',
         ],
     }, {
-        files: ['{client,common}/**/*.js'],
+        files: ['{client,common,static}/**/*.js'],
         env: {
             browser: true,
         },

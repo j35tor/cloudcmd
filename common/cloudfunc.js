@@ -4,7 +4,7 @@ const rendy = require('rendy');
 const currify = require('currify');
 const store = require('fullstore');
 const {encode} = require('./entity');
-const btoa = require('./btoa');
+const {btoa} = require('./base64');
 
 const getHeaderField = currify(_getHeaderField);
 
@@ -72,30 +72,34 @@ function getPathLink(url, prefix, template) {
         .slice(1, -1);
     
     const allNames = ['/', ...names];
-    const length = allNames.length - 1;
+    const lines = [];
+    const n = allNames.length;
     
     let path = '/';
     
-    const pathHTML = allNames.map((name, index) => {
-        const isLast = index === length;
+    for (let i = 0; i < n; i++) {
+        const name = allNames[i];
+        const isLast = i === n - 1;
         
-        if (index)
+        if (i)
             path += name + '/';
         
-        if (index && isLast)
-            return name + '/';
+        if (i && isLast) {
+            lines.push(name + '/');
+            continue;
+        }
         
-        const slash = index ? '/' : '';
+        const slash = i ? '/' : '';
         
-        return rendy(template, {
+        lines.push(rendy(template, {
             path,
             name,
             slash,
             prefix,
-        });
-    }).join('');
+        }));
+    }
     
-    return pathHTML;
+    return lines.join('');
 }
 
 const getDataName = (name) => {
@@ -131,9 +135,9 @@ module.exports.buildFromJSON = (params) => {
     const htmlPath = getPathLink(path, prefix, template.pathLink);
     
     let fileTable = rendy(template.path, {
-        link        : prefix + FS + path,
-        fullPath    : path,
-        path        : htmlPath,
+        link: prefix + FS + path,
+        fullPath: path,
+        path: htmlPath,
     });
     
     const owner = 'owner';
@@ -146,10 +150,10 @@ module.exports.buildFromJSON = (params) => {
     const date = getFieldName('date');
     
     const header = rendy(templateFile, {
-        tag         : 'div',
-        attribute   : 'data-name="js-fm-header" ',
-        className   : 'fm-header',
-        type        : '',
+        tag: 'div',
+        attribute: 'data-name="js-fm-header" ',
+        className: 'fm-header',
+        type: '',
         name,
         size,
         date,
@@ -169,24 +173,24 @@ module.exports.buildFromJSON = (params) => {
         
         const linkResult = rendy(template.link, {
             link,
-            title       : '..',
-            name        : '..',
+            title: '..',
+            name: '..',
         });
         
-        const dataName = 'data-name="js-file-.." ';
+        const dataName = getDataName('..');
         const attribute = 'draggable="true" ' + dataName;
         
         /* Сохраняем путь к каталогу верхнего уровня*/
         fileTable += rendy(template.file, {
-            tag         : 'li',
+            tag: 'li',
             attribute,
-            className   : '',
-            type        : 'directory',
-            name        : linkResult,
-            size        : '&lt;dir&gt;',
-            date        : '--.--.----',
-            owner       : '.',
-            mode        : '--- --- ---',
+            className: '',
+            type: 'directory',
+            name: linkResult,
+            size: '&lt;dir&gt;',
+            date: '--.--.----',
+            owner: '.',
+            mode: '--- --- ---',
         });
     }
     
@@ -255,7 +259,7 @@ function getSize(file) {
         type,
     } = file;
     
-    if (/^directory$/.test(type))
+    if (type === 'directory')
         return '&lt;dir&gt;';
     
     if (/link/.test(type))
